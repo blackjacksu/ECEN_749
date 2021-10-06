@@ -6,7 +6,11 @@
  * Project Info:
  * Compiler: GCC
  * Environement: 
- * 
+ * Class: ECEN 749
+ * Homework: 2
+ * Question: 3
+ * Name: Class Roster
+ * _
 */
 
 #include <stdio.h>
@@ -14,6 +18,10 @@
 #include <math.h>
 
 #define Name_Length 50
+
+// define Error code for return
+#define ERR_SEAT_NOT_AVAILABLE 0
+#define ERR_STUDENT_NOT_IN_CLASS 1
 
 struct student{
     char name[Name_Length];
@@ -33,7 +41,7 @@ struct Class
 };
 
 
-void Add_to_Class(struct student * s, struct Class *class);
+int Add_to_Class(struct student * s, struct Class *class);
 void Remove_from_class(struct student * s, struct Class *class);
 void Save_Class_Info_to_File();
 int Init_Class(int capacity, char *name, struct Class *class);
@@ -53,9 +61,21 @@ int main(void) {
     
     
     // Initialize the linked list
-    Init_Class(50, "501", class_501);
-    Init_Class(50, "502", class_502);
-    Init_Class(50, "503", class_503);
+    if (!Init_Class(50, "501", class_501))
+    {
+        // Init failed
+        printf("Class 501 not init");
+    }
+    if (!Init_Class(50, "502", class_502))
+    {
+        // Init failed
+        printf("Class 502 not init");
+    }
+    if (!Init_Class(50, "503", class_503))
+    {
+        // Init failed
+        printf("Class 503 not init");
+    }
 
     while(keep_menu)
     {
@@ -159,14 +179,24 @@ int Init_Class(int capacity, char *name, struct Class *class)
     ptr->occupied_seats = 0;
     ptr->head = NULL;
     ptr->tail = NULL;
+    
+    return 0;
 }
 
-void Add_to_Class(struct student * s, struct Class *class)
+int Add_to_Class(struct student * s, struct Class *class)
 {
     // Add student to class in ascending order 
     struct Class *class_ptr = class;
     struct student *new_student = (struct student *)malloc(sizeof(struct student));
     struct student *current = (struct student *)malloc(sizeof(struct student));
+
+    // check remaining seats
+    if (class_ptr->remaining_seats >= class_ptr->class_capacity)
+    {
+        // No more empty seats
+        return ERR_SEAT_NOT_AVAILABLE;
+    }
+
     // update the seat info in class
     class_ptr->occupied_seats++;
     class_ptr->remaining_seats = class_ptr->class_capacity - class_ptr->occupied_seats;
@@ -207,10 +237,18 @@ void Add_to_Class(struct student * s, struct Class *class)
         new_student->next = current->next;
         current->next = new_student;
     }
+    return 0;
 }
 void Remove_from_class(struct student * s, struct Class *class)
 {
-
+    // Add student to class in ascending order 
+    struct Class *class_ptr = class;
+    struct student *remove_student = (struct student *)malloc(sizeof(struct student));
+    struct student *current = (struct student *)malloc(sizeof(struct student));    
+    if (strcmp()==0)
+    {
+        
+    }
 
 }
 void Save_Class_Info_to_File(struct Class *class, char *file_name)
